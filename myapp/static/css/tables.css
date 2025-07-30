@@ -1,0 +1,109 @@
+/* Table Styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  color: #fff; /* Text color */
+}
+
+th,
+td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #ccc; /* Light gray border for rows */
+}
+
+th {
+  background-color: #2e7d32; /* Green background for header */
+  color: #fff; /* White text for header */
+}
+
+tr:hover {
+  background-color: rgba(255, 255, 255, 0.1); /* Light hover effect */
+}
+
+/* Filter Section Styles */
+.filter-section {
+  margin: 20px 0;
+  display: flex;
+  align-items: center;
+}
+
+.filter-section label {
+  margin-right: 10px; /* Space between label and input */
+  color: #fff; /* White text for label */
+}
+
+.filter-section input {
+  padding: 10px;
+  margin-right: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #263043; /* Input background color */
+  color: #fff; /* Input text color */
+}
+
+.filter-section button {
+  padding: 10px 20px;
+}
+
+.table-image {
+    max-width: 100% !important;
+    max-height: 100% !important;
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain !important;
+}
+
+.table-image-container {
+    width: 150px !important;
+    height: 150px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-color: #1d2634;
+    padding: 2px;
+    border-radius: 4px;
+}
+
+.no-data-row td {
+    padding: 20px;
+    text-align: center;
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Kurangi padding pada cell tabel yang berisi gambar */
+td:last-child {
+    padding: 8px;
+    vertical-align: middle;
+}
+
+/* Pagination styles */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+    gap: 10px;
+}
+
+.pagination button {
+    padding: 8px 15px;
+    background-color: #2e7d32;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.pagination button:disabled {
+    background-color: #263043;
+    cursor: not-allowed;
+}
+
+.pagination span {
+    color: white;
+    padding: 0 10px;
+}

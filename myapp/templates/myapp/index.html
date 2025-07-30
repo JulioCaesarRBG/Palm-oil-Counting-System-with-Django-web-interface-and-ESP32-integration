@@ -1,0 +1,243 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Project Information</title>
+
+    <!-- Montserrat Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Material Icons -->
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
+      rel="stylesheet"
+    />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/index.css' %}" />
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="nav-brand">
+        <span class="material-icons-outlined">token</span>
+        <span>Palm Oil Counter</span>
+      </div>
+      <div class="nav-links">
+        <a href="#hero">Home</a>
+        <a href="#about">About</a>
+        <a href="#features">Features</a>
+        <a href="#tech">Technology</a>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero-section">
+      <div class="container">
+        <div class="hero-content">
+          <h1>Smart Palm Oil Counting System</h1>
+          <p class="hero-subtitle">AI-Powered Real-time Counting and Monitoring for Oil Palm Fresh Fruit Bunches</p>
+          <div class="hero-buttons">
+            <a href="#features" class="btn btn-primary">Explore Features</a>
+            <a href="#about" class="btn btn-secondary">Learn More</a>
+          </div>
+        </div>
+        <div class="hero-image">
+          <img src="{% static 'images/index/hero-palm-plantation.jpg' %}" alt="Palm Oil Plantation" />
+        </div>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about-section">
+      <div class="container">
+        <div class="section-content">
+          <div class="text-content">
+            <h2>About Our Counting System</h2>
+            <p>
+              Our advanced AI-powered system revolutionizes palm oil production monitoring by providing real-time counting and tracking of Fresh Fruit Bunches (FFB). Using cutting-edge YOLOv8 technology running on Raspberry Pi, we deliver accurate counting with live display integration to optimize production monitoring and inventory management.
+            </p>
+            <div class="stats">
+              <div class="stat">
+                <h3>90%+</h3>
+                <p>Accuracy</p>
+              </div>
+              <div class="stat">
+                <h3>Real-time</h3>
+                <p>Detection</p>
+              </div>
+              <div class="stat">
+                <h3>24/7</h3>
+                <p>Monitoring</p>
+              </div>
+            </div>
+          </div>
+          <div class="image-content">
+            <img src="{% static 'images/index/about-ai-technology.jpg' %}" alt="AI Technology" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section">
+      <div class="container">
+        <h2>Key Features</h2>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <span class="material-icons-outlined">visibility</span>
+            </div>
+            <h3>Real-time Counting</h3>
+            <p>Instant counting and tracking of palm oil bunches with live video processing and immediate counting results display.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">
+              <span class="material-icons-outlined">dashboard</span>
+            </div>
+            <h3>Web Monitoring Panel</h3>
+            <p>Easy-to-use web interface for monitoring counting progress, starting sessions, and viewing real-time statistics.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">
+              <span class="material-icons-outlined">display_settings</span>
+            </div>
+            <h3>LED Counter Display</h3>
+            <p>Real-time counting results shown on ESP32-controlled LED P10 panels for immediate visibility of current counts.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">
+              <span class="material-icons-outlined">analytics</span>
+            </div>
+            <h3>Smart Counting Analytics</h3>
+            <p>Comprehensive counting data logging and historical analysis for better production monitoring and inventory tracking.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">
+              <span class="material-icons-outlined">cloud_sync</span>
+            </div>
+            <h3>Data Synchronization</h3>
+            <p>Automatic counting data synchronization and backup for seamless access to counting records across devices.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Technology Section -->
+    <section id="tech" class="tech-section">
+      <div class="container">
+        <div class="section-content">
+          <div class="image-content">
+            <img src="{% static 'images/index/tech-stack.jpg' %}" alt="Technology Stack" />
+          </div>
+          <div class="text-content">
+            <h2>Advanced Counting Technology Stack</h2>
+            <p>
+              Our system leverages state-of-the-art technology to deliver unparalleled performance and reliability in palm oil counting and monitoring applications.
+            </p>
+            <div class="tech-features">
+              <div class="tech-item">
+                <span class="material-icons-outlined">psychology</span>
+                <div>
+                  <h4>YOLOv8 AI Model</h4>
+                  <p>Latest object detection technology for precise fruit counting and tracking</p>
+                </div>
+              </div>
+              <div class="tech-item">
+                <span class="material-icons-outlined">developer_board</span>
+                <div>
+                  <h4>Raspberry Pi Processing</h4>
+                  <p>Edge computing for real-time counting processing and reduced latency</p>
+                </div>
+              </div>
+              <div class="tech-item">
+                <span class="material-icons-outlined">web</span>
+                <div>
+                  <h4>Django Web Framework</h4>
+                  <p>Robust web application for counting system control and monitoring</p>
+                </div>
+              </div>
+              <div class="tech-item">
+                <span class="material-icons-outlined">storage</span>
+                <div>
+                  <h4>SQLite Database</h4>
+                  <p>Lightweight data storage for counting records and historical analysis</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section id="cta" class="cta-section">
+      <div class="container">
+        <div class="cta-content">
+          <h2>Advanced Palm Oil Counting Technology</h2>
+          <p>Experience the future of smart agriculture with our AI-powered counting system. This demonstration showcases cutting-edge technology for optimizing palm oil production through automated counting and monitoring.</p>
+          <div class="cta-buttons">
+            <div class="demo-info">
+              <span class="material-icons-outlined">info</span>
+              <span>This is a demonstration system for research and educational purposes</span>
+            </div>
+            <div class="contact-info">
+              <span class="material-icons-outlined">school</span>
+              <span>Developed for academic research in smart agriculture counting technology</span>
+            </div>
+          </div>
+        </div>
+        <div class="cta-image">
+          <img src="{% static 'images/index/cta-modern-agriculture.jpg' %}" alt="Modern Agriculture" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-section">
+            <h3>Smart Palm Oil Counting System</h3>
+            <p>An AI-powered research project demonstrating advanced technology for agricultural counting and monitoring.</p>
+          </div>
+          <div class="footer-section">
+            <h4>Technology Stack</h4>
+            <ul>
+              <li>YOLOv8 Object Detection</li>
+              <li>Raspberry Pi Edge Computing</li>
+              <li>Django Web Framework</li>
+              <li>SQLite Database</li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h4>Research Focus</h4>
+            <ul>
+              <li>Real-time Counting</li>
+              <li>Smart Agriculture</li>
+              <li>IoT Integration</li>
+              <li>Computer Vision</li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2025 Palm Oil Counting System. Academic Research Project.</p>
+          <!-- Hidden admin access - click on logo 5 times -->
+          <div id="admin-access" style="display: none; margin-top: 1rem;">
+            <a href="{% url 'myapp:login' %}" style="color: #81c784; text-decoration: none; font-size: 0.9rem;">Admin Access</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+
+    <!-- Custom JS -->
+    <script src="{% static 'js/index.js' %}"></script>
+  </body>
+</html>

@@ -1,0 +1,119 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Control</title>
+
+    <!-- Montserrat Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Material Icons -->
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
+      rel="stylesheet"
+    />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/control.css' %}" />
+  </head>
+  <body>
+    {% csrf_token %}
+    <div class="grid-container">
+      <!-- Header -->
+      <header class="header">
+        <div class="header-left">
+          <h2>Control</h2>
+        </div>
+      </header>
+      <!-- End Header -->
+
+      <!-- Sidebar -->
+      <aside id="sidebar">
+        <div class="sidebar-title">
+          <div class="sidebar-brand">
+            <span class="material-icons-outlined">token</span>
+            <span>Counter</span>
+          </div>
+        </div>
+
+        <ul class="sidebar-list">
+          <li class="sidebar-list-item">
+            <a href="{% url 'myapp:dashboard' %}">
+              <span class="material-icons-outlined">dashboard</span> Dashboard
+            </a>
+          </li>
+          <li class="sidebar-list-item">
+            <a href="{% url 'myapp:control' %}">
+              <span class="material-icons-outlined">fact_check</span> Control
+            </a>
+          </li>
+          <li class="sidebar-list-item">
+            <a href="{% url 'myapp:tables' %}">
+              <span class="material-icons-outlined">poll</span> Tables
+            </a>
+          </li>
+          <li class="sidebar-list-item" style="margin-top: 40vh">
+            <a href="{% url 'myapp:logout' %}">
+              <span class="material-icons-outlined">logout</span> Logout
+            </a>
+          </li>
+        </ul>
+      </aside>
+      <!-- End Sidebar -->
+
+      <!-- Main -->
+      <main class="main-container">
+        <div class="text-center">
+          <div id="statusIndicator" class="status-indicator">
+            <span class="status-dot"></span>
+            <span class="status-text">Stopped</span>
+          </div>
+          <div id="countDisplay">
+            <p>Ripe Count: <span id="suitableCount">0</span></p>
+            <p>Unripe Count: <span id="unsuitableCount">0</span></p>
+          </div>
+
+          <!-- Container untuk Video dan Gambar -->
+          <div id="mediaContainer" class="media-container">
+            <!-- Status GIFs -->
+            <div id="statusDisplay" class="status-display">
+                <div class="status-gif waiting">
+                    <img src="{% static 'images/waiting.gif' %}" 
+                         alt="Waiting" 
+                         class="status-gif-image">
+                </div>
+                <div class="status-gif loading" style="display: none;">
+                    <img src="{% static 'images/loading.gif' %}" 
+                         alt="Loading" 
+                         class="status-gif-image">
+                </div>
+                <div class="status-gif running" style="display: none;">
+                    <img src="{% static 'images/running.gif' %}" 
+                         alt="Running" 
+                         class="status-gif-image">
+                </div>
+            </div>
+          </div>
+
+          <div class="control-buttons">
+            <button id="startBtn" class="btn btn-secondary">Start</button>
+            <button id="pauseBtn" class="btn btn-warning">Pause</button>
+            <button id="stopBtn" class="btn btn-danger">Stop</button>
+          </div>
+        </div>
+      </main>
+      <!-- End Main -->
+    </div>
+
+    <!-- Scripts -->
+    <!-- <script src="{% static 'js/detection-status.js' %}"></script> -->
+    <script src="{% static 'js/control.js' %}"></script>
+    <script src="{% static 'js/sidebar.js' %}"></script>
+  </body>
+</html>

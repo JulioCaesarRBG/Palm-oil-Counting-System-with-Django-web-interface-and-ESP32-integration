@@ -1,0 +1,319 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Tables</title>
+
+    <!-- Montserrat Font -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet"
+    />
+
+    <!-- Material Icons -->
+    <link
+        href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
+        rel="stylesheet"
+    />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/tables.css' %}" />
+
+    <style>
+        #pageInfo {
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        #pageInfo:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .page-input-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #263043;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .page-input-popup input {
+            background-color: #1d2634;
+            border: 1px solid #404b61;
+            color: white;
+            padding: 8px;
+            margin: 10px 0;
+            width: 100%;
+            border-radius: 4px;
+        }
+
+        .page-input-popup .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+
+        .page-input-popup button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .page-input-popup button.go-btn {
+            background-color: #2e7d32;
+        }
+
+        .page-input-popup button.cancel-btn {
+            background-color: #d32f2f;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        /* Image Modal Styles */
+        .image-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            cursor: pointer;
+        }
+
+        .image-modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 90%;
+            max-height: 90%;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+        }
+
+        .image-modal img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        .image-modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 35px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            background: rgba(0, 0, 0, 0.5);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+
+        .image-modal-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .table-image {
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border-radius: 4px;
+            max-width: 80px;
+            max-height: 60px;
+            object-fit: cover;
+        }
+
+        .table-image:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .table-image-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 60px;
+        }
+
+        .image-modal-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .image-modal-info h3 {
+            margin: 0 0 5px 0;
+            font-size: 18px;
+        }
+
+        .image-modal-info p {
+            margin: 0;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <h2>Data Tables</h2>
+            </div>
+        </header>
+        <!-- End Header -->
+
+        <!-- Sidebar -->
+        <aside id="sidebar">
+            <div class="sidebar-title">
+                <div class="sidebar-brand">
+                    <span class="material-icons-outlined">token</span>
+                    <span>Counter</span>
+                </div>
+            </div>
+
+            <ul class="sidebar-list">
+                <li class="sidebar-list-item">
+                    <a href="{% url 'myapp:dashboard' %}">
+                        <span class="material-icons-outlined">dashboard</span> Dashboard
+                    </a>
+                </li>
+                <li class="sidebar-list-item">
+                    <a href="{% url 'myapp:control' %}">
+                        <span class="material-icons-outlined">fact_check</span> Control
+                    </a>
+                </li>
+                <li class="sidebar-list-item">
+                    <a href="{% url 'myapp:tables' %}">
+                        <span class="material-icons-outlined">poll</span> Tables
+                    </a>
+                </li>
+                <li class="sidebar-list-item" style="margin-top: 40vh">
+                    <a href="{% url 'myapp:logout' %}">
+                        <span class="material-icons-outlined">logout</span> Logout
+                    </a>
+                </li>
+            </ul>
+        </aside>
+        <!-- End Sidebar -->
+
+        <!-- Main -->
+        <main class="main-container">
+            <div class="filter-section">
+                <label for="startDate">Start Date:</label>
+                <input type="date" id="startDate" />
+                <label for="endDate">End Date:</label>
+                <input type="date" id="endDate" />
+                <button id="filterBtn" class="btn btn-secondary">Filter</button>
+                <button id="todayBtn" class="btn btn-secondary">Today</button>
+            </div>
+
+            <table id="resultsTable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Ripe Count</th>
+                        <th>Unripe Count</th>
+                        <th>Image</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in table_data %}
+                    <tr class="table-row" data-date="{{ item.date }}">
+                        <td>{{ item.date_display }}</td>
+                        <td>{{ item.suitable_count }}</td>
+                        <td>{{ item.unsuitable_count }}</td>
+                        <td>
+                            {% if item.image %}
+                                <div class="table-image-container">
+                                    <img src="{{ item.image.url }}" 
+                                         alt="Session Image" 
+                                         class="table-image"
+                                         data-date="{{ item.date_display }}"
+                                         data-suitable="{{ item.suitable_count }}"
+                                         data-unsuitable="{{ item.unsuitable_count }}"
+                                    >
+                                </div>
+                            {% else %}
+                                <div class="table-image-container">
+                                    <span>No Image</span>
+                                </div>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="pagination">
+                <button id="prevBtn" disabled>Previous</button>
+                <span id="pageInfo">Page 1 of 1</span>
+                <button id="nextBtn" disabled>Next</button>
+            </div>
+        </main>
+        <!-- End Main -->
+    </div>
+
+    <!-- Scripts -->
+    <script src="{% static 'js/sidebar.js' %}"></script>
+    <script src="{% static 'js/tables.js' %}"></script>
+
+    <div class="overlay" id="overlay"></div>
+    <div class="page-input-popup" id="pageInputPopup">
+        <h3>Go to Page</h3>
+        <input type="number" id="pageNumberInput" min="1" placeholder="Enter page number">
+        <div class="buttons">
+            <button class="go-btn" id="goToPageBtn">Go</button>
+            <button class="cancel-btn" id="cancelPageBtn">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Image Modal -->
+    <div class="image-modal" id="imageModal">
+        <div class="image-modal-close" id="imageModalClose">&times;</div>
+        <div class="image-modal-content">
+            <img id="modalImage" src="" alt="Full Size Image">
+            <div class="image-modal-info" id="imageModalInfo">
+                <h3 id="modalImageTitle">Session Image</h3>
+                <p id="modalImageDetails">Click outside or press ESC to close</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

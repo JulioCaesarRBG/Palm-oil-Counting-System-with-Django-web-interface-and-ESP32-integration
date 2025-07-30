@@ -1,0 +1,701 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Dashboard</title>
+
+    <!-- Montserrat Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Material Icons -->
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
+      rel="stylesheet"
+    />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    
+    <style>
+      /* Chart responsiveness */
+      .charts {
+        max-width: 100%;
+        overflow: hidden;
+      }
+      
+      .charts-card {
+        max-width: 100%;
+        overflow: hidden;
+      }
+      
+      #pie-chart, #area-chart {
+        max-width: 100%;
+        overflow: hidden;
+      }
+      
+      /* Week Selector Modal */
+      .week-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .week-modal-content {
+        background: #263043;
+        border-radius: 8px;
+        width: 90%;
+        max-width: 500px;
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+      }
+      
+      .week-modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        border-bottom: 1px solid #404b61;
+      }
+      
+      .week-modal-header h3 {
+        margin: 0;
+        color: white;
+      }
+      
+      .week-modal-close {
+        font-size: 28px;
+        font-weight: bold;
+        color: #aaa;
+        cursor: pointer;
+        line-height: 1;
+      }
+      
+      .week-modal-close:hover {
+        color: #fff;
+      }
+      
+      .week-modal-body {
+        padding: 20px;
+      }
+      
+      .week-navigation {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      
+      .week-nav-btn {
+        padding: 8px 16px;
+        border: 1px solid #404b61;
+        background: #1d2634;
+        color: white;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+      
+      .week-nav-btn:hover {
+        background: #404b61;
+      }
+      
+      .week-nav-btn.current {
+        background: #2e7d32;
+        border-color: #2e7d32;
+      }
+      
+      .week-picker {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      
+      .week-picker input[type="week"] {
+        background: #1d2634;
+        border: 1px solid #404b61;
+        color: white;
+        padding: 8px;
+        border-radius: 4px;
+      }
+      
+      .btn {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+      
+      .btn-primary {
+        background: #2e7d32;
+        color: white;
+      }
+      
+      .btn-primary:hover {
+        background: #1b5e20;
+      }
+      
+      /* Loading overlay */
+      .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2000;
+      }
+      
+      .loading-spinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid #404b61;
+        border-top: 5px solid #2e7d32;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        .charts {
+          flex-direction: column;
+        }
+        
+        .charts-card {
+          width: 100%;
+          margin-bottom: 1rem;
+        }
+        
+        .week-modal-content {
+          width: 95%;
+          margin: 10px;
+        }
+        
+        .week-navigation {
+          flex-direction: column;
+        }
+        
+        .week-picker {
+          flex-direction: column;
+        }
+      }
+      
+      /* Status styles */
+      .status-running {
+        color: #4CAF50;
+      }
+      
+      .status-paused {
+        color: #FF9800;
+      }
+      
+      .status-loading {
+        color: #2196F3;
+      }
+      
+      .status-offline {
+        color: #f44336;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="grid-container">
+      <!-- Header -->
+      <header class="header">
+        <div class="header-left">
+          <h2>Dashboard</h2>
+        </div>
+      </header>
+      <!-- End Header -->
+
+      <!-- Sidebar -->
+      <aside id="sidebar">
+        <div class="sidebar-title">
+          <div class="sidebar-brand">
+            <span class="material-icons-outlined">token</span>
+            <span>Counter</span>
+          </div>
+        </div>
+
+        <ul class="sidebar-list">
+          <li class="sidebar-list-item">
+            <a href="{% url 'myapp:dashboard' %}">
+              <span class="material-icons-outlined">dashboard</span> Dashboard
+            </a>
+          </li>
+          <li class="sidebar-list-item">
+            <a href="{% url 'myapp:control' %}">
+              <span class="material-icons-outlined">fact_check</span> Control
+            </a>
+          </li>
+          <li class="sidebar-list-item">
+            <a href="{% url 'myapp:tables' %}">
+              <span class="material-icons-outlined">poll</span> Tables
+            </a>
+          </li>
+          <li class="sidebar-list-item" style="margin-top: 40vh">
+            <a href="{% url 'myapp:logout' %}">
+              <span class="material-icons-outlined">logout</span> Logout
+            </a>
+          </li>
+        </ul>
+      </aside>
+      <!-- End Sidebar -->
+
+      <!-- Main -->
+      <main class="main-container">
+        <!-- <div class="main-title">
+          
+        </div> -->
+
+        <div class="week-info">
+          <h3 id="weekTitle">
+            Week of {{ start_of_week }} - {{ end_of_week }}
+          </h3>
+        </div>
+
+        <div class="main-cards">
+          <div class="card">
+            <div class="card-inner">
+              <h3>WEEKLY RIPE</h3>
+              <span class="material-icons-outlined">inventory_2</span>
+            </div>
+            <h1 id="weekly-ripe">{{ weekly_suitable }}</h1>
+          </div>
+          <div class="card">
+            <div class="card-inner">
+              <h3>WEEKLY UNRIPE</h3>
+              <span class="material-icons-outlined">category</span>
+            </div>
+            <h1 id="weekly-unripe">{{ weekly_unsuitable }}</h1>
+          </div>
+          <div class="card">
+            <div class="card-inner">
+              <h3>LAST COUNTED</h3>
+              <span class="material-icons-outlined">schedule</span>
+            </div>
+            <h1 id="last-counted">{{ last_counted|date:"d M Y" }}</h1>
+          </div>
+          <div class="card">
+            <div class="card-inner">
+              <h3>STATUS</h3>
+              <span class="material-icons-outlined">analytics</span>
+            </div>
+            <h1 id="counting-status">Loading...</h1>
+          </div>
+        </div>
+
+        <div class="charts">
+          <div class="charts-card">
+            <h2 class="chart-title">Palm Oil Distribution</h2>
+            <div id="pie-chart"></div>
+          </div>
+
+          <div class="charts-card">
+            <h2 class="chart-title">Palm Oil Counted</h2>
+            <div id="area-chart"></div>
+          </div>
+        </div>
+      </main>
+      <!-- End Main -->
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.35.5/apexcharts.min.js"></script>
+    
+    <!-- Pass data to JavaScript via data attribute -->
+    <div id="chart-data" data-chart='{{ chart_data|safe }}' style="display: none;"></div>
+    
+    <script>
+      // Function to update counting status real-time
+      async function updateCountingStatus() {
+        try {
+          const response = await fetch('/api/detection/get_counts/');
+          if (response.ok) {
+            const data = await response.json();
+            const statusElement = document.getElementById('counting-status');
+            
+            if (data.status) {
+              let statusText = data.status.charAt(0).toUpperCase() + data.status.slice(1);
+              if (data.status === 'running') {
+                statusText += ' ✅';
+              } else if (data.status === 'paused') {
+                statusText += ' ⏸️';
+              } else if (data.status === 'loading') {
+                statusText += ' 🔄';
+              } else {
+                statusText += ' ⏹️';
+              }
+              statusElement.textContent = statusText;
+              statusElement.className = `status-${data.status}`;
+            }
+          }
+        } catch (error) {
+          console.log('Detection server not available');
+          const statusElement = document.getElementById('counting-status');
+          statusElement.textContent = 'Offline ❌';
+          statusElement.className = 'status-offline';
+        }
+      }
+
+      // Update status immediately and then every 5 seconds
+      updateCountingStatus();
+      setInterval(updateCountingStatus, 5000);
+
+      try {
+        /* Get data from Django template via data attribute */
+        const chartDataElement = document.getElementById('chart-data');
+        const chartData = JSON.parse(chartDataElement.getAttribute('data-chart'));
+        
+        console.log('Chart data:', chartData); // Debug log
+        
+        /* Prepare data for charts */
+        const dates = chartData.map(item => item.day);
+        const suitableCount = chartData.map(item => item.suitable_count);
+        const unsuitableCount = chartData.map(item => item.unsuitable_count);
+        
+        console.log('Dates:', dates); // Debug log
+        console.log('Ripe:', suitableCount); // Debug log
+        console.log('Unripe:', unsuitableCount); // Debug log
+        
+        /* Area Chart */
+        var areaChartOptions = {
+          series: [{
+            name: 'Ripe',
+            data: suitableCount
+          }, {
+            name: 'Unripe',
+            data: unsuitableCount
+          }],
+          chart: {
+            type: 'area',
+            height: 280,
+            toolbar: { show: false },
+            foreColor: '#fff',
+            parentHeightOffset: 0
+          },
+          colors: ['#2e7d32', '#d50000'],
+          dataLabels: { enabled: false },
+          stroke: { curve: 'smooth' },
+          xaxis: {
+            categories: dates,
+            labels: {
+              style: {
+                colors: '#fff'
+              }
+            },
+            title: {
+              text: 'Day',
+              style: {
+                color: '#fff'
+              }
+            }
+          },
+          yaxis: {
+            labels: {
+              style: {
+                colors: '#fff'
+              }
+            },
+            title: {
+              text: 'Count',
+              style: {
+                color: '#fff'
+              }
+            }
+          },
+          tooltip: {
+            theme: 'dark',
+            y: {
+              title: {
+                formatter: (seriesName) => seriesName
+              }
+            }
+          },
+          responsive: [{
+            breakpoint: 768,
+            options: {
+              chart: {
+                height: 250
+              }
+            }
+          }]
+        };
+
+        var areaChart = new ApexCharts(
+          document.querySelector("#area-chart"),
+          areaChartOptions
+        );
+        areaChart.render();
+
+        /* Pie Chart */
+        const totalSuitable = suitableCount.reduce((a, b) => a + b, 0);
+        const totalUnsuitable = unsuitableCount.reduce((a, b) => a + b, 0);
+        
+        var pieChartOptions = {
+          series: [totalSuitable, totalUnsuitable],
+          chart: {
+            type: 'pie',
+            height: 280,
+            foreColor: '#fff',
+            parentHeightOffset: 0
+          },
+          labels: ['Ripe', 'Unripe'],
+          colors: ['#2e7d32', '#d50000'],
+          tooltip: { theme: 'dark' },
+          responsive: [{
+            breakpoint: 768,
+            options: {
+              chart: {
+                height: 250
+              }
+            }
+          }]
+        };
+
+        var pieChart = new ApexCharts(
+          document.querySelector("#pie-chart"),
+          pieChartOptions
+        );
+        pieChart.render();
+        
+        /* Handle sidebar toggle resize */
+        function handleResize() {
+          setTimeout(() => {
+            areaChart.updateOptions({
+              chart: {
+                width: '100%'
+              }
+            });
+            pieChart.updateOptions({
+              chart: {
+                width: '100%'
+              }
+            });
+          }, 300);
+        }
+        
+        /* Listen for sidebar toggle events */
+        const sidebar = document.getElementById('sidebar');
+        if (sidebar) {
+          const observer = new MutationObserver(handleResize);
+          observer.observe(sidebar, { attributes: true, attributeFilter: ['class'] });
+        }
+        
+        /* Listen for window resize */
+        window.addEventListener('resize', handleResize);
+        
+      } catch (error) {
+        console.error('Error rendering charts:', error);
+        
+        // Fallback: render empty charts if data parsing fails
+        var fallbackAreaChart = new ApexCharts(
+          document.querySelector("#area-chart"),
+          {
+            series: [{name: 'Ripe', data: [0,0,0,0,0,0,0]}, {name: 'Unripe', data: [0,0,0,0,0,0,0]}],
+            chart: { type: 'area', height: 280, foreColor: '#fff' },
+            colors: ['#2e7d32', '#d50000'],
+            xaxis: { categories: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'] }
+          }
+        );
+        fallbackAreaChart.render();
+        
+        var fallbackPieChart = new ApexCharts(
+          document.querySelector("#pie-chart"),
+          {
+            series: [0, 0],
+            chart: { type: 'pie', height: 280, foreColor: '#fff' },
+            labels: ['Ripe', 'Unripe'],
+            colors: ['#2e7d32', '#d50000']
+          }
+        );
+        fallbackPieChart.render();
+      }
+      
+      // Week Selector Functionality
+      let currentAreaChart, currentPieChart;
+      currentAreaChart = areaChart;
+      currentPieChart = pieChart;
+      
+      // Modal elements
+      const weekTitle = document.getElementById('weekTitle');
+      const weekModal = document.getElementById('weekSelectorModal');
+      const weekModalClose = document.querySelector('.week-modal-close');
+      const prevWeekBtn = document.getElementById('prevWeekBtn');
+      const currentWeekBtn = document.getElementById('currentWeekBtn');
+      const nextWeekBtn = document.getElementById('nextWeekBtn');
+      const weekPicker = document.getElementById('weekPicker');
+      const selectWeekBtn = document.getElementById('selectWeekBtn');
+      
+      // Get current week in YYYY-Www format
+      function getCurrentWeek() {
+        const now = new Date();
+        const startOfYear = new Date(now.getFullYear(), 0, 1);
+        const days = Math.floor((now - startOfYear) / (24 * 60 * 60 * 1000));
+        const weekNumber = Math.ceil((days + startOfYear.getDay() + 1) / 7);
+        return `${now.getFullYear()}-W${weekNumber.toString().padStart(2, '0')}`;
+      }
+      
+      // Set initial week picker value
+      weekPicker.value = getCurrentWeek();
+      
+      // Show modal
+      weekTitle.addEventListener('click', () => {
+        weekModal.style.display = 'flex';
+        weekPicker.value = getCurrentWeek();
+      });
+      
+      // Close modal
+      weekModalClose.addEventListener('click', () => {
+        weekModal.style.display = 'none';
+      });
+      
+      weekModal.addEventListener('click', (e) => {
+        if (e.target === weekModal) {
+          weekModal.style.display = 'none';
+        }
+      });
+      
+      // Week navigation buttons
+      prevWeekBtn.addEventListener('click', () => {
+        const currentWeek = weekPicker.value;
+        if (currentWeek) {
+          const [year, week] = currentWeek.split('-W');
+          let newWeek = parseInt(week) - 1;
+          let newYear = parseInt(year);
+          
+          if (newWeek < 1) {
+            newWeek = 52;
+            newYear -= 1;
+          }
+          
+          weekPicker.value = `${newYear}-W${newWeek.toString().padStart(2, '0')}`;
+        }
+      });
+      
+      nextWeekBtn.addEventListener('click', () => {
+        const currentWeek = weekPicker.value;
+        if (currentWeek) {
+          const [year, week] = currentWeek.split('-W');
+          let newWeek = parseInt(week) + 1;
+          let newYear = parseInt(year);
+          
+          if (newWeek > 52) {
+            newWeek = 1;
+            newYear += 1;
+          }
+          
+          weekPicker.value = `${newYear}-W${newWeek.toString().padStart(2, '0')}`;
+        }
+      });
+      
+      currentWeekBtn.addEventListener('click', () => {
+        weekPicker.value = getCurrentWeek();
+      });
+      
+      // Apply week selection
+      selectWeekBtn.addEventListener('click', async () => {
+        const selectedWeek = weekPicker.value;
+        if (!selectedWeek) return;
+        
+        // Show loading
+        const loadingOverlay = document.createElement('div');
+        loadingOverlay.className = 'loading-overlay';
+        loadingOverlay.innerHTML = '<div class="loading-spinner"></div>';
+        document.body.appendChild(loadingOverlay);
+        
+        try {
+          // Get CSRF token
+          const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+          
+          // Send request to get data for selected week
+          const response = await fetch('/api/dashboard/week-data/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify({ week: selectedWeek })
+          });
+          
+          if (!response.ok) {
+            throw new Error('Failed to fetch week data');
+          }
+          
+          const data = await response.json();
+          
+          // Update UI with new data
+          updateDashboardData(data);
+          
+          // Close modal
+          weekModal.style.display = 'none';
+          
+        } catch (error) {
+          console.error('Error fetching week data:', error);
+          alert('Failed to load week data. Please try again.');
+        } finally {
+          // Remove loading overlay
+          document.body.removeChild(loadingOverlay);
+        }
+      });
+      
+      // Function to update dashboard data
+      function updateDashboardData(data) {
+        // Update cards
+        document.querySelector('.main-cards .card:nth-child(1) h1').textContent = data.weekly_suitable;
+        document.querySelector('.main-cards .card:nth-child(2) h1').textContent = data.weekly_unsuitable;
+        document.querySelector('.main-cards .card:nth-child(3) h1').textContent = data.last_counted;
+        document.querySelector('.main-cards .card:nth-child(4) h1').textContent = data.counting_status;
+        
+        // Update week title
+        document.getElementById('weekTitle').innerHTML = `Week of ${data.start_of_week} - ${data.end_of_week}`;
+        
+        // Parse chart data
+        const chartData = JSON.parse(data.chart_data);
+        const dates = chartData.map(item => item.day);
+        const suitableCount = chartData.map(item => item.suitable_count);
+        const unsuitableCount = chartData.map(item => item.unsuitable_count);
+        
+        // Update charts
+        currentAreaChart.updateSeries([
+          { name: 'Ripe', data: suitableCount },
+          { name: 'Unripe', data: unsuitableCount }
+        ]);
+        
+        currentAreaChart.updateOptions({
+          xaxis: { categories: dates }
+        });
+        
+        const totalSuitable = suitableCount.reduce((a, b) => a + b, 0);
+        const totalUnsuitable = unsuitableCount.reduce((a, b) => a + b, 0);
+        
+        currentPieChart.updateSeries([totalSuitable, totalUnsuitable]);
+      }
+    </script>
+    <!-- Custom JS -->
+    <script src="{% static 'js/script.js' %}"></script>
+    <script src="{% static 'js/sidebar.js' %}"></script>
+  </body>
+</html>

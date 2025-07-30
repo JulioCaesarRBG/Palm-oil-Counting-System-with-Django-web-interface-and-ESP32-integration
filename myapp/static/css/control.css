@@ -1,0 +1,237 @@
+/* Button Styles */
+.btn {
+  padding: 12px 30px; /* Perbesar ukuran button */
+  border: none;
+  border-radius: 5px; /* Round corners */
+  color: #fff; /* White text */
+  font-size: 16px; /* Increase font size */
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px; /* Tetapkan lebar minimum */
+}
+
+.btn-secondary {
+  background-color: #2e7d32; /* Hijau untuk Start */
+}
+
+.btn-secondary:hover {
+  background-color: #1b5e20;
+}
+
+.btn-warning {
+  background-color: #ff9800; /* Orange untuk Pause */
+}
+
+.btn-warning:hover {
+  background-color: #f57c00;
+}
+
+.btn-danger {
+  background-color: #d32f2f; /* Merah untuk Stop */
+}
+
+.btn-danger:hover {
+  background-color: #b71c1c;
+}
+
+/* Tambahkan style untuk button yang disabled */
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Count Display Styles */
+.count-display {
+  font-size: 24px; /* Increase font size for count display */
+  margin-bottom: 20px; /* Add some space below */
+  color: #fff; /* Set text color to white */
+}
+
+.latest-image-container {
+    width: 540px !important;
+    height: 450px !important;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-color: #263043;
+    border-radius: 8px;
+}
+
+.latest-image {
+    width: 540px !important;
+    height: 450px !important;
+    object-fit: contain !important;
+    display: block !important;
+}
+
+.video-container {
+    width: 540px;
+    height: 450px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-color: #263043;
+    border-radius: 8px;
+}
+
+#videoFeed {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Tambahkan style untuk transisi antara video dan gambar */
+.video-container, .latest-image-container {
+    transition: opacity 0.3s ease-in-out;
+}
+
+.media-container {
+    width: 540px;
+    height: 450px;
+    margin: 20px auto;
+    position: relative;
+    background-color: #263043;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#videoFeed,
+#staticImage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.no-image {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+}
+
+.control-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center; /* Pusatkan button secara horizontal */
+    align-items: center;
+    gap: 20px; /* Tambahkan jarak antar button */
+}
+
+.control-buttons button {
+    margin: 0; /* Hapus margin yang ada */
+}
+
+/* Transisi halus antara video dan gambar */
+#videoFeed,
+#staticImage {
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Tambahkan di bagian bawah file */
+.status-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.status-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+    background-color: #d50000;  /* Merah untuk stopped */
+}
+
+.status-dot.running {
+    background-color: #4caf50;  /* Hijau untuk running */
+}
+
+.status-dot.paused {
+    background-color: #ff9800;  /* Orange untuk paused */
+}
+
+.status-dot.loading {
+    background-color: #ffc107;  /* Kuning untuk loading */
+    animation: pulse 1s infinite;
+}
+
+.status-text {
+    font-size: 14px;
+    color: #fff;
+}
+
+.status-display {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.status-gif {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.status-gif-image {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+}
+
+/* Animation untuk transisi status */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.status-gif.active {
+    display: flex;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Update hover effects */
+.btn:hover {
+    transform: translateY(-2px); /* Efek mengambang saat hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Tambah shadow saat hover */
+}
+
+.btn:active {
+    transform: translateY(0); /* Reset posisi saat diklik */
+}

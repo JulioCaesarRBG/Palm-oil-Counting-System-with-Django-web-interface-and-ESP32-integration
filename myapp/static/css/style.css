@@ -1,0 +1,366 @@
+canvas {
+  max-width: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #1d2634;
+  color: #9e9ea4;
+  font-family: "Montserrat", sans-serif;
+}
+
+.material-icons-outlined {
+  vertical-align: middle;
+  line-height: 1px;
+  font-size: 35px;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  grid-template-rows: 0.2fr 3fr;
+  grid-template-areas:
+    "header header"
+    "sidebar main";
+  height: 100vh;
+  margin-left: 60px;
+  transition: margin-left 0.3s ease;
+}
+
+/* ---------- HEADER ---------- */
+.header {
+  grid-area: header;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30px;
+  box-shadow: 0 6px 7px -3px rgba(0, 0, 0, 0.35);
+  background-color: #263043;
+  position: fixed;
+  width: calc(100% - 60px);
+  z-index: 100;
+  transition: width 0.3s ease;
+}
+
+.menu-icon {
+  display: none !important;
+}
+
+/* ---------- SIDEBAR ---------- */
+
+#sidebar {
+  grid-area: sidebar;
+  height: 100%;
+  background-color: #263043;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  width: 60px;
+  position: fixed;
+  left: 0;
+  z-index: 200;
+}
+
+#sidebar:hover {
+  width: 260px;
+}
+
+.sidebar-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px 15px;
+  margin-bottom: 30px;
+  overflow: hidden;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 15px;
+  font-size: 20px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.sidebar-brand .material-icons-outlined {
+  opacity: 1;
+  min-width: 35px;
+  transition: all 0.3s ease;
+}
+
+.sidebar-brand span:not(.material-icons-outlined) {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+#sidebar:hover .sidebar-brand span:not(.material-icons-outlined) {
+  opacity: 1;
+}
+
+.sidebar-list {
+  padding: 0;
+  margin-top: 15px;
+  list-style-type: none;
+}
+
+.sidebar-list-item {
+  padding: 15px 15px;
+  font-size: 18px;
+  position: relative;
+  transition: all 0.3s ease;
+  border-left: 3px solid transparent;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.sidebar-list-item > a {
+  text-decoration: none;
+  color: #9e9ea4;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+}
+
+.sidebar-list-item > a span:not(.material-icons-outlined) {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+#sidebar:hover .sidebar-list-item > a span:not(.material-icons-outlined) {
+  opacity: 1;
+}
+
+.sidebar-list-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-left: 3px solid #2e7d32;
+  cursor: pointer;
+}
+
+.sidebar-list-item:hover > a {
+  color: #ffffff;
+}
+
+.sidebar-list-item .material-icons-outlined {
+  min-width: 35px;
+  margin-right: 10px;
+}
+
+.sidebar-list-item:hover .material-icons-outlined {
+  color: #2e7d32;
+  transform: scale(1.1);
+}
+
+/* Menandai halaman aktif */
+.sidebar-list-item.active {
+  background-color: rgba(46, 125, 50, 0.1);
+  border-left: 3px solid #2e7d32;
+}
+
+.sidebar-list-item.active > a {
+  color: #ffffff;
+}
+
+.sidebar-list-item.active .material-icons-outlined {
+  color: #2e7d32;
+}
+
+/* Khusus untuk tombol logout */
+.sidebar-list-item[style*="margin-top"] {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: auto !important;
+}
+
+.sidebar-list-item[style*="margin-top"]:hover {
+  background-color: rgba(211, 47, 47, 0.1);
+  border-left: 3px solid #d32f2f;
+}
+
+.sidebar-list-item[style*="margin-top"]:hover .material-icons-outlined {
+  color: #d32f2f;
+}
+
+.sidebar-responsive {
+  display: inline !important;
+  position: absolute;
+  /*
+    the z-index of the ApexCharts is 11
+    we want the z-index of the sidebar higher so that
+    the charts are not showing over the sidebar 
+    on small screens
+  */
+  z-index: 12 !important;
+}
+
+/* ---------- MAIN ---------- */
+
+.main-container {
+  grid-area: main;
+  overflow-y: auto;
+  padding: 30px 20px 20px 2px;
+  color: rgba(255, 255, 255, 0.95);
+  transition: margin-left 0.3s ease;
+}
+
+.main-title {
+  display: flex;
+  justify-content: space-between;
+}
+
+.week-info {
+  background-color: #263043;
+  padding: 15px 25px;
+  border-radius: 5px;
+  margin: 20px 0;
+  box-shadow: 0 6px 7px -4px rgba(0, 0, 0, 0.2);
+}
+
+.week-info h3 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 1.2em;
+  text-align: center;
+}
+
+.main-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 20px;
+  margin: 15px 0;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 25px;
+  border-radius: 5px;
+}
+
+.card:first-child {
+  background-color: #2962ff;
+}
+
+.card:nth-child(2) {
+  background-color: #ff6d00;
+}
+
+.card:nth-child(3) {
+  background-color: #2e7d32;
+}
+
+.card:nth-child(4) {
+  background-color: #d50000;
+}
+
+.card-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-inner > .material-icons-outlined {
+  font-size: 45px;
+}
+
+.card h1 {
+  font-size: 1.5em;
+  margin: 10px 0;
+  word-wrap: break-word;
+}
+
+.card h3 {
+  font-size: 1em;
+  margin: 0;
+}
+
+.charts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 40px;
+}
+
+.charts-card {
+  background-color: #263043;
+  margin-bottom: 20px;
+  padding: 25px;
+  box-sizing: border-box;
+  -webkit-column-break-inside: avoid;
+  border-radius: 5px;
+  box-shadow: 0 6px 7px -4px rgba(0, 0, 0, 0.2);
+}
+
+.chart-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---------- MEDIA QUERIES ---------- */
+
+/* Medium <= 992px */
+
+@media screen and (max-width: 992px) {
+  .grid-container {
+    margin-left: 60px;
+  }
+
+  #sidebar {
+    display: block !important;
+  }
+
+  .grid-container.sidebar-expanded {
+    margin-left: 260px;
+  }
+
+  .grid-container.sidebar-expanded .header {
+    width: calc(100% - 260px);
+  }
+}
+
+/* Small <= 768px */
+
+@media screen and (max-width: 768px) {
+  .main-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .charts {
+    grid-template-columns: 1fr;
+  }
+
+  .week-info h3 {
+    font-size: 1em;
+  }
+  
+  .card h1 {
+    font-size: 1.2em;
+  }
+}
+
+/* Extra Small <= 576px */
+
+@media screen and (max-width: 576px) {
+  .hedaer-left {
+    display: none;
+  }
+}
+
+/* Tambahkan class baru untuk grid container saat sidebar hover */
+.grid-container.sidebar-expanded {
+  margin-left: 260px;
+}
+
+/* Update saat sidebar expanded */
+.grid-container.sidebar-expanded .header {
+  width: calc(100% - 260px);
+}
+
+/* Update saat sidebar expanded */
+.grid-container.sidebar-expanded .main-container {
+  margin-left: -40px;
+}
