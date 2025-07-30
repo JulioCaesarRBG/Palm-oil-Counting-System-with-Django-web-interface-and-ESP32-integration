@@ -1,0 +1,24 @@
+# Core Django and Web Framework
+Django>=4.2.0
+djangorestframework>=3.14.0
+
+# AI and Computer Vision
+ultralytics>=8.0.0
+opencv-python>=4.8.0
+torch>=2.0.0
+torchvision>=0.15.0
+numpy>=1.24.0
+Pillow>=10.0.0
+
+# Web Server and API
+Flask>=2.3.0
+requests>=2.31.0
+
+# Hardware Communication
+pyserial>=3.5
+
+# Data Processing
+pandas>=2.0.0
+
+# Development Tools
+python-dotenv>=1.0.0
