@@ -34,7 +34,7 @@
         <a href="#about">About</a>
         <a href="#features">Features</a>
         <a href="#tech">Technology</a>
-        <a href="{% url 'myapp:login' %}" class="btn-login">Admin Login</a>
+        <a href="{% url 'myapp:login' %}" class="btn-login">Login</a>
       </div>
     </nav>
 
@@ -135,7 +135,7 @@
       <div class="container">
         <div class="section-content">
           <div class="image-content">
-            <img src="{% static 'images/index/raspberry-pi-camera.jpg' %}" alt="Raspberry Pi Technology" />
+            <img src="{% static 'images/index/tech-stack.jpg' %}" alt="Technology Stack" />
           </div>
           <div class="text-content">
             <h2>Advanced Counting Technology Stack</h2>
@@ -182,14 +182,17 @@
       <div class="container">
         <div class="cta-content">
           <h2>Advanced Palm Oil Counting Technology</h2>
-          <p>Experience the future of smart agriculture with our AI-powered counting system for optimizing palm oil production through automated counting and monitoring.</p>
+          <p>Experience the future of smart agriculture with our AI-powered counting system. This system showcases cutting-edge technology for optimizing palm oil production through automated counting and monitoring.</p>
           <div class="cta-buttons">
-            <a href="{% url 'myapp:login' %}" class="btn btn-primary btn-large">Get Started</a>
-            <a href="#about" class="btn btn-secondary btn-large">Learn More</a>
+            <a href="{% url 'myapp:login' %}" class="btn btn-primary btn-large">Access System</a>
+            <div class="contact-info">
+              <span class="material-icons-outlined">school</span>
+              <span>Developed for academic research in smart agriculture counting technology</span>
+            </div>
           </div>
         </div>
         <div class="cta-image">
-          <img src="{% static 'images/index/led-display-system.jpg' %}" alt="LED Display System" />
+          <img src="{% static 'images/index/cta-modern-agriculture.jpg' %}" alt="Modern Agriculture" />
         </div>
       </div>
     </section>
