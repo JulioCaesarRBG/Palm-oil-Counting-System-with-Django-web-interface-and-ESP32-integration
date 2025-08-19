@@ -107,17 +107,15 @@ void displayPalmOilCounts() {
   
   // Display status indicator on the right side with better labels
   if (detectionStatus == "running") {
-    dmd.drawString(80, 0, "RUN", 3, GRAPHICS_NORMAL);
+    dmd.drawString(85, 0, "RUN", 3, GRAPHICS_NORMAL);
   } else if (detectionStatus == "paused") {
-    dmd.drawString(80, 0, "PAU", 3, GRAPHICS_NORMAL);
+    dmd.drawString(85, 0, "PAU", 3, GRAPHICS_NORMAL);
   } else if (detectionStatus == "loading") {
-    dmd.drawString(80, 0, "LDG", 3, GRAPHICS_NORMAL);
+    dmd.drawString(85, 0, "LDG", 3, GRAPHICS_NORMAL);
   } else if (detectionStatus == "stopped") {
-    dmd.drawString(80, 0, "STP", 3, GRAPHICS_NORMAL);
-    // Add visual indication that system is stopped
-    dmd.drawString(80, 9, "---", 3, GRAPHICS_NORMAL);
+    dmd.drawString(85, 0, "STP", 3, GRAPHICS_NORMAL);
   } else {
-    dmd.drawString(80, 0, "OFF", 3, GRAPHICS_NORMAL);
+    dmd.drawString(85, 0, "STP", 3, GRAPHICS_NORMAL);
   }
 }
 //________________________________________________________________________________

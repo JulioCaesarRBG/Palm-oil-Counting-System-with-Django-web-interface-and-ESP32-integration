@@ -229,14 +229,14 @@ def detect_objects_thread(model_path):
         detection_state.is_running = True
         detection_state.is_initialized = True
         
-        # Connect to ESP32 for display updates
-        if Config.ESP32_ENABLED:
-            esp32_connected = detection_state.esp32_handler.connect()
-            if esp32_connected:
-                # Send initial data to ESP32
+        # Send initial status to ESP32 (connection should already exist from startup)
+        if Config.ESP32_ENABLED and detection_state.esp32_handler.is_connected:
+            detection_state.esp32_handler.send_data(0, 0, "running")
+            print("📤 Sent initial running status to ESP32")
+        elif Config.ESP32_ENABLED:
+            print("⚠️ Warning: ESP32 not connected, trying to reconnect...")
+            if detection_state.esp32_handler.connect():
                 detection_state.esp32_handler.send_data(0, 0, "running")
-            else:
-                print("⚠️ Warning: ESP32 not connected, continuing without display")
         
         while detection_state.is_running:
             detection_state.frame_count += 1
@@ -382,8 +382,9 @@ def detect_objects_thread(model_path):
             detection_state.cap = None
         if detection_state.show_debug_window:
             cv2.destroyAllWindows()
-        # Disconnect ESP32
-        detection_state.esp32_handler.disconnect()
+        # Don't disconnect ESP32 here - let it be handled by stop/start functions
+        # detection_state.esp32_handler.disconnect()
+        print("🔄 Detection thread cleanup completed (ESP32 connection preserved)")
 
 @app.route('/start', methods=['POST'])
 def start_detection():
@@ -442,12 +443,31 @@ def stop_detection():
         detection_state.cap.release()
         detection_state.cap = None
     detection_state.current_frame = None
-    # Send stop status to ESP32 and disconnect
-    detection_state.esp32_handler.send_data(0, 0, "stopped")
-    detection_state.esp32_handler.disconnect()
-    # Reset counters
+    
+    # Reset counters FIRST
     detection_state.suitable_count = 0
     detection_state.unsuitable_count = 0
+    
+    # Check ESP32 connection and reconnect if needed
+    if not detection_state.esp32_handler.is_connected and Config.ESP32_ENABLED:
+        print("🔌 ESP32 not connected, attempting to reconnect...")
+        detection_state.esp32_handler.connect()
+    
+    # THEN send stop status to ESP32 with reset counts (0,0)
+    print("📤 Sending stop signal to ESP32...")
+    success = detection_state.esp32_handler.send_data(0, 0, "stopped")
+    
+    if success:
+        print("✅ Stop signal sent successfully")
+        # Longer delay to ensure ESP32 processes the data
+        time.sleep(1.0)  # Increased to 1 second
+    else:
+        print("❌ Failed to send stop signal")
+    
+    # Don't disconnect ESP32 immediately - keep connection for next session
+    # detection_state.esp32_handler.disconnect()
+    print("🔌 ESP32 connection maintained for next session")
+    
     return jsonify({"status": "stopped"})
 
 @app.route('/get_counts')
@@ -576,6 +596,39 @@ def esp32_send_test():
             return jsonify({"status": "error", "message": "Failed to send test data"})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
+
+@app.route('/esp32/reset_display', methods=['POST'])
+def esp32_reset_display():
+    """Reset ESP32 display to show 0 counts"""
+    try:
+        # Check ESP32 connection and reconnect if needed
+        if not detection_state.esp32_handler.is_connected and Config.ESP32_ENABLED:
+            print("🔌 ESP32 not connected, attempting to reconnect...")
+            detection_state.esp32_handler.connect()
+        
+        success = detection_state.esp32_handler.send_data(0, 0, "stopped")
+        if success:
+            return jsonify({"status": "success", "message": "ESP32 display reset to 0"})
+        else:
+            return jsonify({"status": "error", "message": "Failed to reset ESP32 display"})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)})
+
+# Initialize ESP32 connection when server starts
+def initialize_esp32():
+    """Initialize ESP32 connection on server startup"""
+    if Config.ESP32_ENABLED:
+        print("🚀 Initializing ESP32 connection on startup...")
+        success = detection_state.esp32_handler.connect()
+        if success:
+            # Send initial stopped status
+            detection_state.esp32_handler.send_data(0, 0, "stopped")
+            print("✅ ESP32 initialized successfully")
+        else:
+            print("⚠️ ESP32 initialization failed, will retry later")
+
+# Initialize ESP32 when the module is loaded
+initialize_esp32()
 
 if __name__ == '__main__':
     app.run(host=Config.HOST, port=Config.PORT, threaded=True) 

@@ -155,7 +155,7 @@ CORS_ALLOWED_ORIGINS = [
 CORS_ALLOW_ALL_ORIGINS = False  # Ubah ke False untuk keamanan
 
 DETECTION_SERVER_CONFIG = {
-    'HOST': 'http://192.168.0.118',  # IP server deteksi
+    'HOST': 'http://192.168.137.250',  # IP server deteksi
     'PORT': 5000,
     'TIMEOUT': 10,
 } 

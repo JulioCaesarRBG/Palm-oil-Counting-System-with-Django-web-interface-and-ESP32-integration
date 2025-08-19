@@ -49,7 +49,9 @@ def get_detection_server_url():
     return base_url
 
 def index(request):
-    return render(request, 'myapp/index.html')
+    import time
+    timestamp = int(time.time())  # Current timestamp to force cache refresh
+    return render(request, 'myapp/index.html', {'timestamp': timestamp})
 
 def login_view(request):
     if request.method == 'POST':

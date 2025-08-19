@@ -14,7 +14,7 @@ class Config:
 
     # ESP32 integration settings
     ESP32_ENABLED = True  # Set to False to disable ESP32 communication
-    ESP32_PORT = '/dev/ttyUSB0'  # Static port for Raspberry Pi ESP32 connection
+    ESP32_PORT = 'COM4'  # Static port for Raspberry Pi ESP32 connection /dev/ttyUSB0
     ESP32_BAUDRATE = 115200
     ESP32_TIMEOUT = 1
     ESP32_SEND_INTERVAL = 1  # Send data every second
