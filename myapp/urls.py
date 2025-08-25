@@ -19,6 +19,7 @@ urlpatterns = [
     path('api/video_feed/', views.video_feed, name='video_feed'),
     path('api/detection/get_counts/', views.get_counts, name='get_counts'),
     path('api/dashboard/week-data/', views.get_week_data, name='get_week_data'),
+    path('api/dashboard/period-data/', views.get_period_data, name='get_period_data'),
     path('api/save_count_data/', views.save_count_data_api, name='save_count_data_api'),
     path('api/update_count_data/<int:record_id>/', views.update_count_data_api, name='update_count_data_api'),
 ] 

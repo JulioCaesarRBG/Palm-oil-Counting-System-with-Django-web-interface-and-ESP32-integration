@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wireframe - Control Panel</title>
+    <link rel="stylesheet" href="wireframe-style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Control Panel Wireframe</h1>
+        
+        <div class="grid-layout">
+            <!-- Header -->
+            <div class="header wireframe" data-component="HEADER">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h2>Control Panel</h2>
+                    <div style="display: flex; gap: 15px;">
+                        <div style="width: 30px; height: 30px; border: 1px solid #666; background: #f0f0f0;"></div>
+                        <div class="text-placeholder short"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="sidebar wireframe" data-component="SIDEBAR">
+                <div style="margin-bottom: 30px;">
+                    <div style="display: flex; align-items: center; gap: 10px; font-weight: bold;">
+                        <div style="width: 24px; height: 24px; border: 1px solid #666; background: #f0f0f0;"></div>
+                        Counter
+                    </div>
+                </div>
+                <ul class="sidebar-menu">
+                    <li>📊 Dashboard</li>
+                    <li class="active">🎮 Control</li>
+                    <li>📋 Tables</li>
+                    <li style="margin-top: 50px; border-left-color: #f44336;">🚪 Logout</li>
+                </ul>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Current Count Display -->
+                <div class="wireframe" data-component="CURRENT COUNT DISPLAY">
+                    <div class="cards-grid" style="grid-template-columns: repeat(3, 1fr);">
+                        <div class="card">
+                            <h3>Current Ripe Count</h3>
+                            <div style="font-size: 36px; font-weight: bold; color: #4CAF50; margin: 10px 0;">45</div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div class="status-indicator" style="background: #4CAF50;"></div>
+                                <span>Active</span>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h3>Current Unripe Count</h3>
+                            <div style="font-size: 36px; font-weight: bold; color: #f44336; margin: 10px 0;">23</div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div class="status-indicator" style="background: #f44336;"></div>
+                                <span>Active</span>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h3>Detection Status</h3>
+                            <div style="font-size: 18px; font-weight: bold; color: #2196F3; margin: 10px 0;">RUNNING</div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div class="status-indicator" style="background: #2196F3;"></div>
+                                <span>System Online</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video Feed -->
+                <div class="wireframe" data-component="GIF STATUS COUNTING">
+                    <h3>GIF STATUS COUNTING</h3>
+                    <div class="video-feed">
+                        [GIF STATUS COUNTING]<br>
+                    </div>
+                </div>
+
+                <!-- Control Buttons -->
+                <div class="wireframe" data-component="CONTROL BUTTONS">
+                    <h3>System Controls</h3>
+                    <div class="control-panel">
+                        <div class="button primary" style="padding: 15px; background: #4CAF50; color: white;">
+                            ▶️ START DETECTION
+                        </div>
+                        <div class="button" style="padding: 15px; background: #FF9800; color: white;">
+                            ⏸️ PAUSE DETECTION
+                        </div>
+                        <div class="button" style="padding: 15px; background: #2196F3; color: white;">
+                            ▶️ RESUME DETECTION
+                        </div>
+                        <div class="button" style="padding: 15px; background: #f44336; color: white;">
+                            ⏹️ STOP DETECTION
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ESP32 Integration Status -->
+                <div class="wireframe" data-component="ESP32 STATUS">
+                    <h3>ESP32 LED Display Status</h3>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+                        <div class="card">
+                            <h4>LED Display Connection</h4>
+                            <div style="display: flex; align-items: center; gap: 10px; margin: 15px 0;">
+                                <div class="status-indicator" style="background: #4CAF50;"></div>
+                                <span style="font-weight: bold; color: #4CAF50;">Connected</span>
+                            </div>
+                            <div class="text-placeholder medium"></div>
+                            <div class="text-placeholder short"></div>
+                        </div>
+                        <div class="card">
+                            <h4>Display Data Sync</h4>
+                            <div style="display: flex; align-items: center; gap: 10px; margin: 15px 0;">
+                                <div class="status-indicator" style="background: #4CAF50;"></div>
+                                <span style="font-weight: bold; color: #4CAF50;">Synchronized</span>
+                            </div>
+                            <div class="text-placeholder medium"></div>
+                            <div class="text-placeholder short"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity Log -->
+                <div class="wireframe" data-component="ACTIVITY LOG">
+                    <h3>Recent Detection Activity</h3>
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Action</th>
+                                    <th>Count</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>19:45:23</td>
+                                    <td>Detection Started</td>
+                                    <td>Ripe: 45, Unripe: 23</td>
+                                    <td><span style="color: #4CAF50;">●</span> Active</td>
+                                </tr>
+                                <tr>
+                                    <td>19:43:15</td>
+                                    <td>Count Updated</td>
+                                    <td>Ripe: 44, Unripe: 23</td>
+                                    <td><span style="color: #4CAF50;">●</span> Active</td>
+                                </tr>
+                                <tr>
+                                    <td>19:41:02</td>
+                                    <td>ESP32 Sync</td>
+                                    <td>Display Updated</td>
+                                    <td><span style="color: #2196F3;">●</span> Synced</td>
+                                </tr>
+                                <tr>
+                                    <td>19:40:30</td>
+                                    <td>Detection Resumed</td>
+                                    <td>Ripe: 43, Unripe: 23</td>
+                                    <td><span style="color: #4CAF50;">●</span> Active</td>
+                                </tr>
+                                <tr>
+                                    <td>19:38:10</td>
+                                    <td>Detection Paused</td>
+                                    <td>Ripe: 43, Unripe: 23</td>
+                                    <td><span style="color: #FF9800;">●</span> Paused</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

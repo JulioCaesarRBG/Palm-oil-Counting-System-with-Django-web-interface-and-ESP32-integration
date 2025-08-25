@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Palm Oil Counting System - Wireframes</title>
+    <link rel="stylesheet" href="wireframe-style.css">
+    <style>
+        .index-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .page-card {
+            border: 3px solid #333;
+            padding: 20px;
+            background: white;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .page-card:hover {
+            background: #f8f8f8;
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .page-card h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .page-preview {
+            border: 2px dashed #999;
+            height: 200px;
+            background: #f5f5f5;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+        }
+        
+        .page-description {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .header-info {
+            text-align: center;
+            background: linear-gradient(135deg, #2e7d32, #1b5e20);
+            color: white;
+            padding: 40px 20px;
+            margin: -20px -20px 30px -20px;
+            border-radius: 10px;
+        }
+        
+        .tech-stack {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .tech-item {
+            padding: 5px 12px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 15px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-info">
+            <h1>🌴 Palm Oil Counting System</h1>
+            <h2>Wireframe Documentation</h2>
+            <p>Complete UI/UX wireframe mockups for the Palm Oil Counting System web application</p>
+            <div class="tech-stack">
+                <div class="tech-item">Django Web Framework</div>
+                <div class="tech-item">YOLOv8 AI Detection</div>
+                <div class="tech-item">ESP32 Integration</div>
+                <div class="tech-item">Real-time Charts</div>
+                <div class="tech-item">Responsive Design</div>
+            </div>
+        </div>
+
+        <div class="wireframe" data-component="WIREFRAME INDEX">
+            <h3>📋 Application Pages Overview</h3>
+            <p style="text-align: center; color: #666; margin-bottom: 30px;">
+                Click on any wireframe below to view the detailed layout and component structure
+            </p>
+            
+            <div class="index-grid">
+                <div class="page-card" onclick="window.open('landing-page.html', '_blank')">
+                    <div class="page-preview">🏠</div>
+                    <h3>Landing Page</h3>
+                    <div class="page-description">
+                        Public homepage with hero section, features overview, technology stack, and call-to-action for system access.
+                    </div>
+                </div>
+
+                <div class="page-card" onclick="window.open('login.html', '_blank')">
+                    <div class="page-preview">🔐</div>
+                    <h3>Login Page</h3>
+                    <div class="page-description">
+                        Authentication page with username/password form and system branding for secure access to the dashboard.
+                    </div>
+                </div>
+
+                <div class="page-card" onclick="window.open('dashboard.html', '_blank')">
+                    <div class="page-preview">📊</div>
+                    <h3>Dashboard</h3>
+                    <div class="page-description">
+                        Main analytics dashboard with weekly stats, counting charts, and dynamic week selector for data visualization.
+                    </div>
+                </div>
+
+                <div class="page-card" onclick="window.open('control-panel.html', '_blank')">
+                    <div class="page-preview">🎮</div>
+                    <h3>Control Panel</h3>
+                    <div class="page-description">
+                        Real-time control interface with live camera feed, detection controls, and ESP32 status monitoring.
+                    </div>
+                </div>
+
+                <div class="page-card" onclick="window.open('tables.html', '_blank')">
+                    <div class="page-preview">📋</div>
+                    <h3>Data Tables</h3>
+                    <div class="page-description">
+                        Comprehensive data view with counting records, filtering options, export functionality, and pagination.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="wireframe" data-component="SYSTEM FEATURES">
+            <h3>🔧 System Features Covered</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px;">
+                <div class="card">
+                    <h4>🤖 AI Detection</h4>
+                    <ul style="text-align: left; font-size: 14px; color: #666;">
+                        <li>YOLOv8 real-time detection</li>
+                        <li>Ripe vs Unripe classification</li>
+                        <li>Live camera feed integration</li>
+                        <li>Counting accuracy tracking</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>📱 Web Interface</h4>
+                    <ul style="text-align: left; font-size: 14px; color: #666;">
+                        <li>Responsive design</li>
+                        <li>Real-time dashboard</li>
+                        <li>Interactive charts</li>
+                        <li>User authentication</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>🔧 Hardware Integration</h4>
+                    <ul style="text-align: left; font-size: 14px; color: #666;">
+                        <li>ESP32 LED display control</li>
+                        <li>Serial communication</li>
+                        <li>Real-time count sync</li>
+                        <li>Status monitoring</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>📊 Data Management</h4>
+                    <ul style="text-align: left; font-size: 14px; color: #666;">
+                        <li>SQLite database storage</li>
+                        <li>Historical data analysis</li>
+                        <li>Export functionality</li>
+                        <li>Week-based filtering</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="wireframe" data-component="TECHNICAL SPECIFICATIONS">
+            <h3>⚙️ Technical Specifications</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 20px;">
+                <div>
+                    <h4>Frontend Technologies</h4>
+                    <div class="table-container">
+                        <table class="table">
+                            <tbody>
+                                <tr><td>Framework</td><td>Django Templates</td></tr>
+                                <tr><td>Styling</td><td>Custom CSS + Grid/Flexbox</td></tr>
+                                <tr><td>Icons</td><td>Material Icons</td></tr>
+                                <tr><td>Charts</td><td>ApexCharts.js</td></tr>
+                                <tr><td>Fonts</td><td>Montserrat (Google Fonts)</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div>
+                    <h4>Backend Technologies</h4>
+                    <div class="table-container">
+                        <table class="table">
+                            <tbody>
+                                <tr><td>Framework</td><td>Django 5.1.6</td></tr>
+                                <tr><td>Database</td><td>SQLite</td></tr>
+                                <tr><td>AI Model</td><td>YOLOv8 (Ultralytics)</td></tr>
+                                <tr><td>Image Processing</td><td>OpenCV</td></tr>
+                                <tr><td>Hardware</td><td>ESP32 + P10 LED Display</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer style="text-align: center; margin-top: 50px; padding: 30px; border-top: 2px solid #ddd; color: #666;">
+            <h4>📝 Wireframe Documentation</h4>
+            <p>Generated wireframes for Palm Oil Counting System with Django Web Interface and ESP32 Integration</p>
+            <p style="font-size: 12px; margin-top: 15px;">
+                These wireframes represent the complete UI/UX structure and component layout for the application.<br>
+                All wireframes are interactive mockups showing responsive design principles and user flow.
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

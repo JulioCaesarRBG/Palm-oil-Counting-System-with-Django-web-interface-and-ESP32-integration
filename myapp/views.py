@@ -49,9 +49,7 @@ def get_detection_server_url():
     return base_url
 
 def index(request):
-    import time
-    timestamp = int(time.time())  # Current timestamp to force cache refresh
-    return render(request, 'myapp/index.html', {'timestamp': timestamp})
+    return render(request, 'myapp/index.html')
 
 def login_view(request):
     if request.method == 'POST':
@@ -309,53 +307,78 @@ def get_counts(request):
         })
 
 @login_required
+@csrf_exempt
 def get_week_data(request):
     """
     API endpoint untuk mendapatkan data dashboard berdasarkan minggu tertentu
     """
     try:
-        # Ambil parameter week dari request
-        week_str = request.GET.get('week')
+        if request.method == 'POST':
+            # Handle POST request dengan JSON data
+            import json
+            data = json.loads(request.body)
+            week_str = data.get('week')
+        else:
+            # Handle GET request
+            week_str = request.GET.get('week')
+        
         if not week_str:
             return JsonResponse({
                 "status": "error",
                 "message": "Week parameter is required"
             }, status=400)
         
-        # Parse week string (format: "YYYY-MM-DD")
+        # Parse week string (format: "YYYY-Www" untuk week picker)
         try:
-            week_date = datetime.strptime(week_str, '%Y-%m-%d').date()
+            if week_str.startswith('20') and '-W' in week_str:
+                # Format: "2025-W33"
+                year, week_num = week_str.split('-W')
+                year = int(year)
+                week_num = int(week_num)
+                
+                # Hitung tanggal awal minggu dari nomor minggu
+                jan_1 = date(year, 1, 1)
+                # Cari Senin pertama tahun ini
+                days_to_monday = (7 - jan_1.weekday()) % 7
+                if jan_1.weekday() <= 3:  # Jika 1 Jan adalah Kamis atau sebelumnya
+                    days_to_monday = -jan_1.weekday()
+                first_monday = jan_1 + timedelta(days=days_to_monday)
+                
+                # Hitung tanggal minggu yang diminta
+                week_start = first_monday + timedelta(weeks=week_num - 1)
+            else:
+                # Format: "YYYY-MM-DD"
+                week_date = datetime.strptime(week_str, '%Y-%m-%d').date()
+                days_since_monday = week_date.weekday()
+                week_start = week_date - timedelta(days=days_since_monday)
+                
         except ValueError:
             return JsonResponse({
                 "status": "error",
-                "message": "Invalid week date format. Use YYYY-MM-DD"
+                "message": "Invalid week format. Use YYYY-Www or YYYY-MM-DD"
             }, status=400)
         
-        # Hitung start dan end date untuk minggu tersebut
-        # Asumsi minggu dimulai hari Senin
-        days_since_monday = week_date.weekday()
-        week_start = week_date - timedelta(days=days_since_monday)
         week_end = week_start + timedelta(days=6)
         
         # Ambil data untuk minggu tersebut
         week_data = PalmOilCount.objects.filter(
-            created_at__date__range=[week_start, week_end]
+            date__date__range=[week_start, week_end]
         ).values(
-            'created_at__date'
+            'date__date'
         ).annotate(
             suitable_count=Sum('suitable_count'),
             unsuitable_count=Sum('unsuitable_count')
-        ).order_by('created_at__date')
+        ).order_by('date__date')
         
         # Format data untuk chart
         daily_data = []
         for i in range(7):  # 7 hari dalam seminggu
             current_date = week_start + timedelta(days=i)
-            day_name = current_date.strftime('%A')  # Monday, Tuesday, etc.
+            day_name = current_date.strftime('%a')  # Mon, Tue, etc.
             
             # Cari data untuk hari ini
             day_data = next(
-                (item for item in week_data if item['created_at__date'] == current_date),
+                (item for item in week_data if item['date__date'] == current_date),
                 {'suitable_count': 0, 'unsuitable_count': 0}
             )
             
@@ -367,28 +390,205 @@ def get_week_data(request):
             })
         
         # Hitung total untuk minggu ini
-        total_suitable = sum(day['suitable_count'] for day in daily_data)
-        total_unsuitable = sum(day['unsuitable_count'] for day in daily_data)
-        total_count = total_suitable + total_unsuitable
+        weekly_suitable = sum(day['suitable_count'] for day in daily_data)
+        weekly_unsuitable = sum(day['unsuitable_count'] for day in daily_data)
+        
+        # Get last counted date
+        last_count = PalmOilCount.objects.filter(
+            date__date__range=[week_start, week_end]
+        ).order_by('-date').first()
         
         return JsonResponse({
             "status": "success",
-            "data": {
-                "week_start": week_start.strftime('%Y-%m-%d'),
-                "week_end": week_end.strftime('%Y-%m-%d'),
-                "daily_data": daily_data,
-                "totals": {
-                    "suitable_count": total_suitable,
-                    "unsuitable_count": total_unsuitable,
-                    "total_count": total_count
-                }
-            }
+            "weekly_suitable": weekly_suitable,
+            "weekly_unsuitable": weekly_unsuitable,
+            "last_counted": last_count.date.strftime('%d %b %Y') if last_count else 'No data',
+            "counting_status": "stopped",
+            "start_of_week": week_start.strftime('%d %B %Y'),
+            "end_of_week": week_end.strftime('%d %B %Y'),
+            "chart_data": json.dumps(daily_data)
         })
         
     except Exception as e:
         return JsonResponse({
             "status": "error",
             "message": f"Error retrieving week data: {str(e)}"
+        }, status=500)
+
+@login_required
+@csrf_exempt
+def get_period_data(request):
+    """
+    API endpoint untuk mendapatkan data dashboard berdasarkan periode (week/month/year)
+    """
+    try:
+        if request.method == 'POST':
+            import json
+            data = json.loads(request.body)
+            period_type = data.get('period_type')  # 'week', 'month', atau 'year'
+            period_value = data.get('period_value')
+        else:
+            period_type = request.GET.get('period_type')
+            period_value = request.GET.get('period_value')
+        
+        if not period_type or not period_value:
+            return JsonResponse({
+                "status": "error",
+                "message": "Period type and value are required"
+            }, status=400)
+        
+        if period_type == 'week':
+            # Handle week data (existing logic)
+            if period_value.startswith('20') and '-W' in period_value:
+                year, week_num = period_value.split('-W')
+                year = int(year)
+                week_num = int(week_num)
+                
+                jan_1 = date(year, 1, 1)
+                days_to_monday = (7 - jan_1.weekday()) % 7
+                if jan_1.weekday() <= 3:
+                    days_to_monday = -jan_1.weekday()
+                first_monday = jan_1 + timedelta(days=days_to_monday)
+                period_start = first_monday + timedelta(weeks=week_num - 1)
+                period_end = period_start + timedelta(days=6)
+                
+                title = f"Week of {period_start.strftime('%d %B %Y')} - {period_end.strftime('%d %B %Y')}"
+            
+        elif period_type == 'month':
+            # Handle month data
+            year, month = period_value.split('-')
+            year = int(year)
+            month = int(month)
+            
+            period_start = date(year, month, 1)
+            # Get last day of month
+            if month == 12:
+                next_month = date(year + 1, 1, 1)
+            else:
+                next_month = date(year, month + 1, 1)
+            period_end = next_month - timedelta(days=1)
+            
+            title = f"Month of {period_start.strftime('%B %Y')}"
+            
+        elif period_type == 'year':
+            # Handle year data
+            year = int(period_value)
+            period_start = date(year, 1, 1)
+            period_end = date(year, 12, 31)
+            
+            title = f"Year {year}"
+            
+        else:
+            return JsonResponse({
+                "status": "error",
+                "message": "Invalid period type"
+            }, status=400)
+        
+        # Get data for the period
+        period_data = PalmOilCount.objects.filter(
+            date__date__range=[period_start, period_end]
+        ).values(
+            'date__date'
+        ).annotate(
+            suitable_count=Sum('suitable_count'),
+            unsuitable_count=Sum('unsuitable_count')
+        ).order_by('date__date')
+        
+        # Format data for chart based on period type
+        if period_type == 'week':
+            # Daily data for week
+            daily_data = []
+            for i in range(7):
+                current_date = period_start + timedelta(days=i)
+                day_name = current_date.strftime('%a')
+                
+                day_data = next(
+                    (item for item in period_data if item['date__date'] == current_date),
+                    {'suitable_count': 0, 'unsuitable_count': 0}
+                )
+                
+                daily_data.append({
+                    'day': day_name,
+                    'date': current_date.strftime('%Y-%m-%d'),
+                    'suitable_count': day_data['suitable_count'] or 0,
+                    'unsuitable_count': day_data['unsuitable_count'] or 0
+                })
+                
+        elif period_type == 'month':
+            # Weekly data for month
+            daily_data = []
+            current_date = period_start
+            week_num = 1
+            
+            while current_date <= period_end:
+                week_end = min(current_date + timedelta(days=6), period_end)
+                
+                week_data = PalmOilCount.objects.filter(
+                    date__date__range=[current_date, week_end]
+                ).aggregate(
+                    suitable_count=Sum('suitable_count'),
+                    unsuitable_count=Sum('unsuitable_count')
+                )
+                
+                daily_data.append({
+                    'day': f'Week {week_num}',
+                    'date': current_date.strftime('%Y-%m-%d'),
+                    'suitable_count': week_data['suitable_count'] or 0,
+                    'unsuitable_count': week_data['unsuitable_count'] or 0
+                })
+                
+                current_date = week_end + timedelta(days=1)
+                week_num += 1
+                
+        elif period_type == 'year':
+            # Monthly data for year
+            daily_data = []
+            for month in range(1, 13):
+                month_start = date(year, month, 1)
+                if month == 12:
+                    month_end = date(year, 12, 31)
+                else:
+                    month_end = date(year, month + 1, 1) - timedelta(days=1)
+                
+                month_data = PalmOilCount.objects.filter(
+                    date__date__range=[month_start, month_end]
+                ).aggregate(
+                    suitable_count=Sum('suitable_count'),
+                    unsuitable_count=Sum('unsuitable_count')
+                )
+                
+                daily_data.append({
+                    'day': month_start.strftime('%b'),
+                    'date': month_start.strftime('%Y-%m-%d'),
+                    'suitable_count': month_data['suitable_count'] or 0,
+                    'unsuitable_count': month_data['unsuitable_count'] or 0
+                })
+        
+        # Calculate totals
+        total_suitable = sum(day['suitable_count'] for day in daily_data)
+        total_unsuitable = sum(day['unsuitable_count'] for day in daily_data)
+        
+        # Get last counted date in period
+        last_count = PalmOilCount.objects.filter(
+            date__date__range=[period_start, period_end]
+        ).order_by('-date').first()
+        
+        return JsonResponse({
+            "status": "success",
+            "period_type": period_type,
+            "weekly_suitable": total_suitable,
+            "weekly_unsuitable": total_unsuitable,
+            "last_counted": last_count.date.strftime('%d %b %Y') if last_count else 'No data',
+            "counting_status": "stopped",
+            "start_of_week": title,
+            "end_of_week": "",
+            "chart_data": json.dumps(daily_data)
+        })
+        
+    except Exception as e:
+        return JsonResponse({
+            "status": "error",
+            "message": f"Error retrieving period data: {str(e)}"
         }, status=500)
 
 @csrf_exempt

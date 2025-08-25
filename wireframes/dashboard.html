@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wireframe - Dashboard</title>
+    <link rel="stylesheet" href="wireframe-style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Dashboard Wireframe</h1>
+        
+        <div class="grid-layout">
+            <!-- Header -->
+            <div class="header wireframe" data-component="HEADER">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h2>Dashboard</h2>
+                    <div style="display: flex; gap: 15px;">
+                        <div style="width: 30px; height: 30px; border: 1px solid #666; background: #f0f0f0;"></div>
+                        <div class="text-placeholder short"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="sidebar wireframe" data-component="SIDEBAR">
+                <div style="margin-bottom: 30px;">
+                    <div style="display: flex; align-items: center; gap: 10px; font-weight: bold;">
+                        <div style="width: 24px; height: 24px; border: 1px solid #666; background: #f0f0f0;"></div>
+                        Counter
+                    </div>
+                </div>
+                <ul class="sidebar-menu">
+                    <li class="active">📊 Dashboard</li>
+                    <li>🎮 Control</li>
+                    <li>📋 Tables</li>
+                    <li style="margin-top: 50px; border-left-color: #f44336;">🚪 Logout</li>
+                </ul>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Week Selector -->
+                <div class="wireframe" data-component="WEEK SELECTOR">
+                    <div class="week-selector">
+                        <h3>📅 Week of 19 August 2025 - 25 August 2025</h3>
+                        <div class="button primary">📅 Change Week</div>
+                    </div>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="wireframe" data-component="STATS CARDS">
+                    <div class="cards-grid">
+                        <div class="card">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                <strong>WEEKLY RIPE</strong>
+                                <div style="width: 24px; height: 24px; border: 1px solid #666; background: #f0f0f0;"></div>
+                            </div>
+                            <div style="font-size: 24px; font-weight: bold;">150</div>
+                        </div>
+                        <div class="card">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                <strong>WEEKLY UNRIPE</strong>
+                                <div style="width: 24px; height: 24px; border: 1px solid #666; background: #f0f0f0;"></div>
+                            </div>
+                            <div style="font-size: 24px; font-weight: bold;">75</div>
+                        </div>
+                        <div class="card">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                <strong>LAST COUNTED</strong>
+                                <div style="width: 24px; height: 24px; border: 1px solid #666; background: #f0f0f0;"></div>
+                            </div>
+                            <div style="font-size: 16px; font-weight: bold;">19 Aug 2025</div>
+                        </div>
+                        <div class="card">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                <strong>STATUS</strong>
+                                <div style="width: 24px; height: 24px; border: 1px solid #666; background: #f0f0f0;"></div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div class="status-indicator" style="background: #4CAF50;"></div>
+                                <span style="font-weight: bold;">Running ✅</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts -->
+                <div class="wireframe" data-component="CHARTS">
+                    <div class="charts-row">
+                        <div>
+                            <h3 style="margin-bottom: 15px;">Palm Oil Distribution</h3>
+                            <div class="chart-container">
+                                [PIE CHART]<br>
+                                Ripe vs Unripe Distribution
+                            </div>
+                        </div>
+                        <div>
+                            <h3 style="margin-bottom: 15px;">Palm Oil Counted</h3>
+                            <div class="chart-container">
+                                [AREA CHART]<br>
+                                Daily Counting Progress
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Week Selection Modal -->
+                <div class="wireframe" data-component="WEEK SELECTOR MODAL">
+                    <div class="modal-overlay" style="position: relative; height: 300px;">
+                        <div class="modal">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 10px;">
+                                <h3>Select Week</h3>
+                                <div style="font-size: 24px; cursor: pointer;">×</div>
+                            </div>
+                            <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+                                <div class="button">← Previous Week</div>
+                                <div class="button primary">Current Week</div>
+                                <div class="button">Next Week →</div>
+                            </div>
+                            <div style="display: flex; gap: 15px; align-items: center; justify-content: center;">
+                                <label>Select Week:</label>
+                                <div class="form-field" style="width: 150px; display: flex; align-items: center; justify-content: center;">
+                                    [WEEK PICKER]
+                                </div>
+                                <div class="button primary">Apply</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

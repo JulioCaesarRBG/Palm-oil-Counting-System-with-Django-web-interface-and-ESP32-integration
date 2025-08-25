@@ -200,6 +200,23 @@
         .week-picker {
           flex-direction: column;
         }
+        
+        .week-info {
+          flex-direction: column;
+          align-items: center;
+          gap: 10px;
+          text-align: center;
+        }
+        
+        .week-selector-btn {
+          font-size: 13px;
+          padding: 6px 12px;
+        }
+        
+        .week-info h3 {
+          font-size: 16px;
+          margin: 0;
+        }
       }
       
       /* Status styles */
@@ -217,6 +234,140 @@
       
       .status-offline {
         color: #f44336;
+      }
+      
+      /* Week selector button */
+      .week-info {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        text-align: center;
+      }
+      
+      .week-info h3 {
+        margin: 0;
+        font-size: 18px;
+      }
+      
+      .week-selector-btn {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 8px 15px;
+        background: #2e7d32;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+      
+      .week-selector-btn:hover {
+        background: #1b5e20;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      }
+      
+      .week-selector-btn:active {
+        transform: translateY(0);
+      }
+      
+      .week-selector-btn .material-icons-outlined {
+        font-size: 18px;
+      }
+      
+      /* Period Type Selector */
+      .period-type-selector {
+        margin-bottom: 25px;
+        text-align: center;
+      }
+      
+      .period-type-selector h4 {
+        color: white;
+        margin-bottom: 15px;
+        font-size: 16px;
+      }
+      
+      .period-tabs {
+        display: flex;
+        gap: 5px;
+        justify-content: center;
+        margin-bottom: 20px;
+      }
+      
+      .period-tab {
+        padding: 8px 16px;
+        border: 1px solid #404b61;
+        background: #1d2634;
+        color: white;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 14px;
+      }
+      
+      .period-tab:hover {
+        background: #404b61;
+      }
+      
+      .period-tab.active {
+        background: #2e7d32;
+        border-color: #2e7d32;
+        font-weight: bold;
+      }
+      
+      /* Period Selectors */
+      .period-selector {
+        margin-bottom: 20px;
+      }
+      
+      .month-navigation,
+      .year-navigation {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      
+      .month-picker,
+      .year-picker {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      
+      .month-picker input[type="month"],
+      .year-picker input[type="number"] {
+        background: #1d2634;
+        border: 1px solid #404b61;
+        color: white;
+        padding: 8px;
+        border-radius: 4px;
+        width: 150px;
+      }
+      
+      .year-picker input[type="number"] {
+        width: 100px;
+      }
+      
+      .modal-actions {
+        text-align: center;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #404b61;
+      }
+      
+      .date-selector-buttons {
+        display: flex;
+        gap: 10px;
       }
     </style>
   </head>
@@ -272,8 +423,14 @@
 
         <div class="week-info">
           <h3 id="weekTitle">
-            Week of {{ start_of_week }} - {{ end_of_week }}
+            📅 Week of {{ start_of_week }} - {{ end_of_week }}
           </h3>
+          <div class="date-selector-buttons">
+            <button id="weekSelectorBtn" class="week-selector-btn" title="Change week">
+              <span class="material-icons-outlined">edit_calendar</span>
+              Change Period
+            </button>
+          </div>
         </div>
 
         <div class="main-cards">
@@ -321,6 +478,73 @@
       </main>
       <!-- End Main -->
     </div>
+
+    <!-- Week Selector Modal -->
+    <div id="weekSelectorModal" class="week-modal" style="display: none;">
+      <div class="week-modal-content">
+        <div class="week-modal-header">
+          <h3>Select Time Period</h3>
+          <span class="week-modal-close">&times;</span>
+        </div>
+        <div class="week-modal-body">
+          <!-- Period Type Selector -->
+          <div class="period-type-selector">
+            <h4>Select Period Type:</h4>
+            <div class="period-tabs">
+              <button id="weekTab" class="period-tab active" data-period="week">📅 Week</button>
+              <button id="monthTab" class="period-tab" data-period="month">📆 Month</button>
+              <button id="yearTab" class="period-tab" data-period="year">🗓️ Year</button>
+            </div>
+          </div>
+
+          <!-- Week Selection -->
+          <div id="weekSelector" class="period-selector">
+            <div class="week-navigation">
+              <button id="prevWeekBtn" class="week-nav-btn">← Previous Week</button>
+              <button id="currentWeekBtn" class="week-nav-btn current">Current Week</button>
+              <button id="nextWeekBtn" class="week-nav-btn">Next Week →</button>
+            </div>
+            <div class="week-picker">
+              <label for="weekPicker" style="color: white;">Select Week:</label>
+              <input type="week" id="weekPicker" />
+            </div>
+          </div>
+
+          <!-- Month Selection -->
+          <div id="monthSelector" class="period-selector" style="display: none;">
+            <div class="month-navigation">
+              <button id="prevMonthBtn" class="week-nav-btn">← Previous Month</button>
+              <button id="currentMonthBtn" class="week-nav-btn current">Current Month</button>
+              <button id="nextMonthBtn" class="week-nav-btn">Next Month →</button>
+            </div>
+            <div class="month-picker">
+              <label for="monthPicker" style="color: white;">Select Month:</label>
+              <input type="month" id="monthPicker" />
+            </div>
+          </div>
+
+          <!-- Year Selection -->
+          <div id="yearSelector" class="period-selector" style="display: none;">
+            <div class="year-navigation">
+              <button id="prevYearBtn" class="week-nav-btn">← Previous Year</button>
+              <button id="currentYearBtn" class="week-nav-btn current">Current Year</button>
+              <button id="nextYearBtn" class="week-nav-btn">Next Year →</button>
+            </div>
+            <div class="year-picker">
+              <label for="yearPicker" style="color: white;">Select Year:</label>
+              <input type="number" id="yearPicker" min="2020" max="2030" />
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button id="selectPeriodBtn" class="btn btn-primary">Apply</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CSRF Token for AJAX requests -->
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.35.5/apexcharts.min.js"></script>
@@ -534,22 +758,50 @@
         fallbackPieChart.render();
       }
       
-      // Week Selector Functionality
+      // Period Selector Functionality
       let currentAreaChart, currentPieChart;
+      let currentPeriodType = 'week'; // Default to week
       currentAreaChart = areaChart;
       currentPieChart = pieChart;
       
       // Modal elements
       const weekTitle = document.getElementById('weekTitle');
+      const weekSelectorBtn = document.getElementById('weekSelectorBtn');
       const weekModal = document.getElementById('weekSelectorModal');
       const weekModalClose = document.querySelector('.week-modal-close');
+      
+      // Period type tabs
+      const weekTab = document.getElementById('weekTab');
+      const monthTab = document.getElementById('monthTab');
+      const yearTab = document.getElementById('yearTab');
+      const periodTabs = [weekTab, monthTab, yearTab];
+      
+      // Period selectors
+      const weekSelector = document.getElementById('weekSelector');
+      const monthSelector = document.getElementById('monthSelector');
+      const yearSelector = document.getElementById('yearSelector');
+      
+      // Week controls
       const prevWeekBtn = document.getElementById('prevWeekBtn');
       const currentWeekBtn = document.getElementById('currentWeekBtn');
       const nextWeekBtn = document.getElementById('nextWeekBtn');
       const weekPicker = document.getElementById('weekPicker');
-      const selectWeekBtn = document.getElementById('selectWeekBtn');
       
-      // Get current week in YYYY-Www format
+      // Month controls
+      const prevMonthBtn = document.getElementById('prevMonthBtn');
+      const currentMonthBtn = document.getElementById('currentMonthBtn');
+      const nextMonthBtn = document.getElementById('nextMonthBtn');
+      const monthPicker = document.getElementById('monthPicker');
+      
+      // Year controls
+      const prevYearBtn = document.getElementById('prevYearBtn');
+      const currentYearBtn = document.getElementById('currentYearBtn');
+      const nextYearBtn = document.getElementById('nextYearBtn');
+      const yearPicker = document.getElementById('yearPicker');
+      
+      const selectPeriodBtn = document.getElementById('selectPeriodBtn');
+      
+      // Helper functions
       function getCurrentWeek() {
         const now = new Date();
         const startOfYear = new Date(now.getFullYear(), 0, 1);
@@ -558,13 +810,55 @@
         return `${now.getFullYear()}-W${weekNumber.toString().padStart(2, '0')}`;
       }
       
-      // Set initial week picker value
-      weekPicker.value = getCurrentWeek();
+      function getCurrentMonth() {
+        const now = new Date();
+        return `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}`;
+      }
       
-      // Show modal
-      weekTitle.addEventListener('click', () => {
+      function getCurrentYear() {
+        return new Date().getFullYear();
+      }
+      
+      // Initialize period pickers
+      weekPicker.value = getCurrentWeek();
+      monthPicker.value = getCurrentMonth();
+      yearPicker.value = getCurrentYear();
+      
+      // Period type tab switching
+      periodTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          // Remove active class from all tabs
+          periodTabs.forEach(t => t.classList.remove('active'));
+          // Add active class to clicked tab
+          tab.classList.add('active');
+          
+          // Hide all selectors
+          weekSelector.style.display = 'none';
+          monthSelector.style.display = 'none';
+          yearSelector.style.display = 'none';
+          
+          // Show relevant selector
+          const periodType = tab.dataset.period;
+          currentPeriodType = periodType;
+          
+          if (periodType === 'week') {
+            weekSelector.style.display = 'block';
+          } else if (periodType === 'month') {
+            monthSelector.style.display = 'block';
+          } else if (periodType === 'year') {
+            yearSelector.style.display = 'block';
+          }
+        });
+      });
+      
+      // Show modal with button click
+      weekSelectorBtn.addEventListener('click', () => {
         weekModal.style.display = 'flex';
+        
+        // Reset to current values
         weekPicker.value = getCurrentWeek();
+        monthPicker.value = getCurrentMonth();
+        yearPicker.value = getCurrentYear();
       });
       
       // Close modal
@@ -615,10 +909,75 @@
         weekPicker.value = getCurrentWeek();
       });
       
-      // Apply week selection
-      selectWeekBtn.addEventListener('click', async () => {
-        const selectedWeek = weekPicker.value;
-        if (!selectedWeek) return;
+      // Month navigation buttons
+      prevMonthBtn.addEventListener('click', () => {
+        const currentMonth = monthPicker.value;
+        if (currentMonth) {
+          const [year, month] = currentMonth.split('-');
+          let newMonth = parseInt(month) - 1;
+          let newYear = parseInt(year);
+          
+          if (newMonth < 1) {
+            newMonth = 12;
+            newYear -= 1;
+          }
+          
+          monthPicker.value = `${newYear}-${newMonth.toString().padStart(2, '0')}`;
+        }
+      });
+      
+      nextMonthBtn.addEventListener('click', () => {
+        const currentMonth = monthPicker.value;
+        if (currentMonth) {
+          const [year, month] = currentMonth.split('-');
+          let newMonth = parseInt(month) + 1;
+          let newYear = parseInt(year);
+          
+          if (newMonth > 12) {
+            newMonth = 1;
+            newYear += 1;
+          }
+          
+          monthPicker.value = `${newYear}-${newMonth.toString().padStart(2, '0')}`;
+        }
+      });
+      
+      currentMonthBtn.addEventListener('click', () => {
+        monthPicker.value = getCurrentMonth();
+      });
+      
+      // Year navigation buttons
+      prevYearBtn.addEventListener('click', () => {
+        const currentYear = parseInt(yearPicker.value);
+        if (currentYear && currentYear > 2020) {
+          yearPicker.value = currentYear - 1;
+        }
+      });
+      
+      nextYearBtn.addEventListener('click', () => {
+        const currentYear = parseInt(yearPicker.value);
+        if (currentYear && currentYear < 2030) {
+          yearPicker.value = currentYear + 1;
+        }
+      });
+      
+      currentYearBtn.addEventListener('click', () => {
+        yearPicker.value = getCurrentYear();
+      });
+      
+      // Apply period selection
+      selectPeriodBtn.addEventListener('click', async () => {
+        let selectedValue;
+        
+        if (currentPeriodType === 'week') {
+          selectedValue = weekPicker.value;
+        } else if (currentPeriodType === 'month') {
+          selectedValue = monthPicker.value;
+        } else if (currentPeriodType === 'year') {
+          selectedValue = yearPicker.value;
+        }
+        
+        if (!selectedValue) return;
         
         // Show loading
         const loadingOverlay = document.createElement('div');
@@ -630,18 +989,21 @@
           // Get CSRF token
           const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
           
-          // Send request to get data for selected week
-          const response = await fetch('/api/dashboard/week-data/', {
+          // Send request to get data for selected period
+          const response = await fetch('/api/dashboard/period-data/', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
               'X-CSRFToken': csrfToken
             },
-            body: JSON.stringify({ week: selectedWeek })
+            body: JSON.stringify({ 
+              period_type: currentPeriodType,
+              period_value: selectedValue 
+            })
           });
           
           if (!response.ok) {
-            throw new Error('Failed to fetch week data');
+            throw new Error('Failed to fetch period data');
           }
           
           const data = await response.json();
@@ -653,8 +1015,8 @@
           weekModal.style.display = 'none';
           
         } catch (error) {
-          console.error('Error fetching week data:', error);
-          alert('Failed to load week data. Please try again.');
+          console.error('Error fetching period data:', error);
+          alert('Failed to load period data. Please try again.');
         } finally {
           // Remove loading overlay
           document.body.removeChild(loadingOverlay);
